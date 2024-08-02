@@ -334,3 +334,122 @@ Here we present the NGS metabarcoding characterization of prokaryotic extremely 
                               order = 1),
          fill = guide_colorbar(title = "Pearson's r", order = 3))
 
+
+  # Bar plot dendrogram
+
+	library(phyloseq)
+	library(ggtree)
+	library(ggplot2)
+	library(reshape)
+	library(readxl)
+	library(tidyverse)
+	library(phangorn)
+	library(vegan)
+	library(ggdendro)
+	library(dendextend)
+	library(ggsci)
+	library(cowplot)
+
+
+### Import data from excel 
+
+	Kingdom<- read_excel("~/your path")
+	PhylumB<- read_excel("~/your path")
+	PhylumA<- read_excel("~/your path")
+
+### First column becomes row names
+	Kingdom <- Kingdom %>%
+  	tibble::column_to_rownames("Kingdom") 
+
+	PhylumB <- PhylumB %>%
+  	tibble::column_to_rownames("Phylum") 
+
+	PhylumA <- PhylumA %>%
+  	tibble::column_to_rownames("Phylum") 
+
+### Generate example data
+	set.seed(500)
+	combined_matrix <- data.frame(PhylumA)
+	row.names(combined_matrix) <- paste0("s", seq(1,12)) #replaces the names with S1, S2, ...etc)
+
+
+
+### Dendrogram
+	UniFrac(your phyloseq file, weighted=TRUE, normalized=TRUE, parallel=FALSE, fast=TRUE)
+	(y <- UniFrac(your phyloseq file, TRUE))
+
+### Create a distance object
+	unifrac_dist <- as.matrix(y)
+
+### Cluster the distance matrix
+	hc <- hclust(as.dist(unifrac_dist))
+	dendro <- as.dendrogram(hc)
+
+### Plot the dendrogram
+	plot(dendro)
+	plot(dendro, horiz = T)#plot horizontal
+
+### calculate UPGMA tree with phangorn::upgma() and convert to dendrogram
+	dendUPGMA <- dendro #se si vuole associare il dendrogramma dei dati DADA2
+
+	dendUPGMA <- as.dendrogram(upgma(dm))#se si vuole associare la tabella taxa
+
+	plot_dendro_bars_v <- function(df, dend, taxonomy) {
+ 	 #convert dendrogram to segment data
+ 	 dend_data <- dendro_data(dend, type="rectangle")
+ 	 segment_data <- dend_data[["segments"]]
+ 	 #sample positions df
+ 	 sample_pos_table <- with(dend_data$labels, 
+                          	 data.frame(x_center = x, sample = as.character(label), width = 0.9))
+	  #prepare input data
+ 	 ptdf <- rownames_to_column(df, var = "sample") %>%
+   	 pivot_longer(-sample, names_to = taxonomy, values_to = "Frequency") %>%
+   	 group_by(sample) %>%
+   	 mutate(Frequency = Frequency/100,
+          	 ymax = cumsum(Frequency/sum(Frequency)),
+          	 ymin = ymax - Frequency/sum(Frequency),
+          	 y_center = ymax-(Frequency/2)) %>%
+   	 left_join(sample_pos_table) %>%
+  	  mutate(xmin = x_center-width/2,
+          	 xmax = x_center+width/2)
+	  #plot stacked bars
+ 	 axis_limits <- with(sample_pos_table, 
+                      	c(min(x_center - 0.5 * width), max(x_center + 0.5 * width))) + 
+   	 0.1 * c(-1, 1) # extra spacing: 0.1
+ 	 plt_hbars <- ggplot(ptdf, 
+                      	aes_string(x = "x_center", y = "y_center", fill = taxonomy, xmin = "xmin", xmax = "xmax",
+                                	 height = "Frequency", width = "width")) + 
+    	geom_tile() +
+   	 geom_rect(ymin = 0, ymax = 1, color = "black", fill = "transparent") +
+   	 scale_fill_rickandmorty() +
+  	  scale_fill_manual(values=c("darkviolet", "deepskyblue4", "gold", "orange", "springgreen4", "hotpink1", "darkturquoise", "green", "blue4", "gold3", "darkolivegreen1", "pink", "cornflowerblue", "beige", "chartreuse3", "grey", "magenta", "red4", "red", "black", "yellow3", "darkorange2", "plum4", "lightgoldenrod1", "brown2","cornsilk2", "coral4", "chocolate2","chartreuse4", "cadetblue", "burlywood", "bisque4", "azure3", "aquamarine4", "dodgerblue", "gray45", "lemonchiffon2", "mediumorchid", "khaki3", "palegreen2", "seashell3", "violetred3", "indianred1", "lightslategray", "orange2", "thistle", "olivedrab", "moccasin", "mistyrose2", "grey70", "firebrick", "cyan3", "gold3", "lightpink2", "forestgreen", "ghostwhite", "slateblue1", "peru", "gold4", "orange1", "gray63", "mediumspringgreen", "goldenrod2", "lightcyan1", "purple4", "grey92", "firebrick", "plum2", "snow2", "steelblue", "darkorchid", "blue1", "darkolivegreen", "yellow4", "tan2", "rosybrown", "gray77", "darkorange4", "lightpink", "steelblue4", "darkkhaki", "mediumturquoise", "peachpuff3", "gray46", "antiquewhite", "cyan4", "gold3", "grey80", "lightblue", "mediumorchid1", "springgreen2", "lightgoldenrod", "midnightblue", "grey67", "purple4", "goldenrod", "azure2", "darkolivegreen3", "lightpink3", "navajowhite3", "grey50", "gray2", "darkorchid1", "darkorange4", "oldlace", "thistle", "tomato3", "lightblue4", "lightyellow2", "seagreen", "violetred2", "chocolate1", "gray32", "limegreen", "linen", "sienna1", "yellowgreen", "grey63", "palevioletred", "lawngreen", "gray39", "deepskyblue", "yellow3")) +
+   	 scale_y_continuous(expand = c(0, 0)) + 
+  	  # For the y axis, alternatively set the labels as: gene_position_table$gene
+   	 scale_x_continuous(breaks = sample_pos_table[, "x_center"], 
+                     	  labels = sample_pos_table$sample,
+                      	 limits = axis_limits, 
+                      	 expand = c(0, 0)) + 
+   	 labs(x = "", y = "Frequency") +
+   	 theme_bw() +
+   	 theme(# margin: top, right, bottom, and left
+    	  plot.margin = unit(c(-0.9, 0.2, 1, 0.2), "cm"), 
+     	 panel.grid.minor = element_blank())
+	  #plot dendrogram
+	  plt_dendr <- ggplot(segment_data) + 
+  	  geom_segment(aes(x = x, y = y, xend = xend, yend = yend)) + 
+  	  scale_y_continuous(expand = c(0, 0.05)) + 
+  	  scale_x_continuous(breaks = sample_pos_table$x_center, 
+                   	    labels = rep("", nrow(sample_pos_table)), 
+                   	    limits = axis_limits, 
+                    	   expand = c(0, 0)) + 
+  	  labs(x = "", y = "Distance", colour = "", size = "") +
+ 	   theme_bw() + 
+  	  theme(panel.grid.minor = element_blank(),
+        	  panel.grid.major = element_blank())
+	  #combine plots
+	  comb <- plot_grid(plt_dendr, plt_hbars, align = 'v', ncol = 1, axis = "lr", rel_heights = c(0.3, 1))
+	  comb
+	}
+
+	plot_dendro_bars_v(df = combined_matrix, dend = dendUPGMA, taxonomy = "Phylum")
+
