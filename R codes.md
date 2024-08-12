@@ -390,9 +390,9 @@ Here we present the NGS metabarcoding characterization of prokaryotic extremely 
 	plot(dendro, horiz = T)#plot horizontal
 
 ### calculate UPGMA tree with phangorn::upgma() and convert to dendrogram
-	dendUPGMA <- dendro #se si vuole associare il dendrogramma dei dati DADA2
+	dendUPGMA <- dendro # if you want to associate the dendrogram of the DADA2 data
 
-	dendUPGMA <- as.dendrogram(upgma(dm))#se si vuole associare la tabella taxa
+	dendUPGMA <- as.dendrogram(upgma(dm))#if you want to associate other data
 
 	plot_dendro_bars_v <- function(df, dend, taxonomy) {
  	 #convert dendrogram to segment data
