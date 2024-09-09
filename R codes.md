@@ -334,6 +334,13 @@ Here we present the NGS metabarcoding characterization of prokaryotic extremely 
                               order = 1),
          fill = guide_colorbar(title = "Pearson's r", order = 3))
 
+ ## False Discovery Rate (FDR)
+
+	a <- c(1,2,3,4,5,6,7,8,9,10,11,12,13)#nomi campioni
+	p_values <- 		c(0.001,0.002,0.006,0.009,0.011,0.011,0.011,0.024,0.036,0.038,0.046,0.048,0.040)
+	df <- data.frame(a, p_values)
+	df$FDR <- p.adjust(df$p_values, method = "BH")
+
 
   # Bar plot dendrogram
 
