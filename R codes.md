@@ -1,7 +1,6 @@
 # Vietnam
 Here we present the NGS metabarcoding characterization of prokaryotic extremely halophilic communities, thriving in the salt crystallizer ponds of the Hon Khoi solar saltwork fields (HKsf), South Vietnam.
 
-# Enigma-lake
 
 ## DADA2- https://benjjneb.github.io/dada2/tutorial.html
 
