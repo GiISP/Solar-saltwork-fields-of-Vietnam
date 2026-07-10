@@ -16,7 +16,7 @@ https://doi.org/10.3390/microorganisms12101975
 
 ## Abstract
 
-The artificial solar saltworks fields of Hon Khoi are important industrial and biodiversity resources in southern Vietnam. Most hypersaline environments in this area are characterized by saturated salinity, nearly neutral pH, intense ultraviolet radiation, elevated temperatures and fast desiccation processes. However, the extremely halophilic prokaryotic communities associated with these stressful environments remain uninvestigated. To fill this gap, a metabarcoding approach was conducted to characterize these communities by comparing them with solar salterns in northern Vietnam as well as with the Italian salterns of Motya and Trapani. Sequencing analyses revealed that the multiple reuses of crystallization ponds apparently create significant perturbations and structural instability in prokaryotic consortia. However, some interesting features were noticed when we examined the diversity of ultra-small prokaryotes belonging to Patescibacteria and DPANN Archaea. Surprisingly, we found at least five deeply branched clades, two from Patescibacteria and three from DPANN Archaea, which seem to be quite specific to the Hon Khoi saltworks field ecosystem and can be considered as a part of its biogeographical signature. Further studies are needed to characterize these uncultivated taxa, isolate and cultivate them, elucidate their ecological role in hypersaline habitats, and explore their biotechnological and biomedical potential.
+The artificial solar saltworks fields of Hon Khoi are important industrial and biodiversity resources in southern Vietnam. Most hypersaline environments in this area are characterized by saturated salinity, nearly neutral pH, intense ultraviolet radiation, elevated temperatures and fast desiccation processes. However, the extremely halophilic prokaryotic communities associated with these stressful environments remain uninvestigated. To fill this gap, a metabarcoding approach was conducted to characterize these communities by comparing them with solar salterns in northern Vietnam as well as with the Italian salterns of Motya and Trapani. Sequencing analyses revealed that the multiple reuses of crystallization ponds apparently create significant perturbations and structural instability in prokaryotic consortia. However, some interesting features were noticed when we examined the diversity of ultra-small prokaryotes belonging to Patescibacteria and DPANN Archaea. Surprisingly, we found at least five deeply branched clades, two from Patescibacteria and three from DPANN Archaea, which seem to be quite specific to the Hon Khoi saltworks field ecosystem and can be considered part of its biogeographical signature. Further studies are needed to characterize these uncultivated taxa, isolate and cultivate them, elucidate their ecological role in hypersaline habitats, and explore their biotechnological and biomedical potential.
 
 ---
 
@@ -27,11 +27,13 @@ This repository contains the R scripts and supporting files used to reproduce th
 The repository includes:
 
 - DADA2 workflow for 16S rRNA amplicon sequence processing
-- Taxonomic assignment
+- Quality filtering and ASV inference
+- Taxonomic assignment using the SILVA database
 - Phyloseq object construction
 - Alpha diversity analyses
 - Beta diversity analyses
 - Hierarchical clustering
+- Mantel tests
 - Statistical analyses
 - Figure generation
 - Supplementary datasets
@@ -40,18 +42,15 @@ The repository includes:
 
 ## Repository structure
 
-```text
-Scripts/
-Figures/
-Metadata/
-Supplementary_files/
-```
+The repository is organized into folders containing scripts, figures, metadata and supplementary material associated with the publication.
 
 ---
 
 ## Software
 
-The analyses were performed in **R** using the following packages:
+The analyses were performed in **R**.
+
+The main packages used in this repository include:
 
 - DADA2
 - phyloseq
@@ -67,7 +66,7 @@ The analyses were performed in **R** using the following packages:
 
 ## Code developer
 
-The R scripts included in this repository were developed by:
+The R scripts included in this repository were developed by
 
 **Gina La Spada**
 
@@ -75,7 +74,15 @@ The R scripts included in this repository were developed by:
 
 ## Data availability
 
-Raw sequencing data are available through the NCBI Sequence Read Archive (SRA) under the BioProject reported in the associated publication.
+Raw sequencing data are available through the NCBI Sequence Read Archive (SRA).
+
+**BioProject:** PRJNA1142429
+
+**BioSample accessions:** SAMN42940649–SAMN42940667
+
+Nanohaloarchaeota 16S rRNA gene sequences are available in GenBank under accession numbers:
+
+**PQ139286–PQ139293**
 
 ---
 
@@ -90,6 +97,20 @@ La Cono V., La Spada G., Smedile F., *et al.*
 *Microorganisms* **2024**, **12**, 1975.
 
 https://doi.org/10.3390/microorganisms12101975
+
+---
+
+## Contact
+
+For questions regarding the scripts or computational analyses, please contact:
+
+**Gina La Spada**
+
+Institute of Polar Sciences (ISP-CNR), National Research Council (CNR)
+
+Messina, Italy
+
+📧 gina.laspada@cnr.it
 
 ---
 
